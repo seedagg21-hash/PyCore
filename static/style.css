@@ -747,3 +747,52 @@ body, .main-content {
 }
 /* Editör ve Chat yan yana dursun diye yeni bir kapsayıcı mantığı gerekebilir 
    ama şimdilik logoyu düzeltmek için bu yeterli. */
+
+/* --- BURADAN AŞAĞISI YAN PANEL EDİTÖR İÇİNDİR --- */
+
+/* Editör Bölümü - Sağ Tarafa Sabitleme Ayarları */
+#editor-section {
+    position: fixed;       /* Sayfaya sabitle */
+    top: 0;
+    right: -600px;         /* Başlangıçta ekranın sağında gizli */
+    width: 600px;          /* Panelin genişliği */
+    height: 100vh;         /* Tam boy yükseklik */
+    background-color: #1e1e1e;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.5); /* Sola doğru gölge */
+    transition: right 0.4s ease-in-out;      /* Kayma animasyonu */
+    z-index: 2000;         /* Her şeyin üstünde dursun */
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #333;
+}
+
+/* Bu sınıf eklendiğinde panel içeri kayar */
+#editor-section.active {
+    right: 0;
+}
+
+/* Editörün içi */
+#ace-editor {
+    flex-grow: 1; /* Kalan tüm boşluğu kapla */
+    width: 100%;
+}
+
+.editor-header {
+    padding: 15px;
+    background: #252526;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.output-console {
+    height: 150px;
+    background: #000;
+    color: #0f0;
+    padding: 10px;
+    font-family: monospace;
+    overflow-y: auto;
+    border-top: 1px solid #333;
+}
