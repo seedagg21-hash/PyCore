@@ -796,3 +796,30 @@ body, .main-content {
     overflow-y: auto;
     border-top: 1px solid #333;
 }
+
+/* --- MOBİL UYUMLULUK AYARLARI (RESPONSIVE) --- */
+
+/* Eğer ekran genişliği 768px'den küçükse (Tablet ve Telefon) */
+@media screen and (max-width: 768px) {
+    
+    /* Yan Paneli Tam Ekran Yap */
+    #editor-section {
+        width: 100%;       /* Genişlik ekranın tamamı olsun */
+        right: -100%;      /* Gizliyken tamamen sağa gitsin */
+        border-left: none; /* Mobilde sol çizgiye gerek yok */
+    }
+
+    /* Sol Menü (Sidebar) Mobilde Gizlensin (İsteğe bağlı) */
+    /* Menü çok yer kaplıyorsa bu satırı açabilirsin: */
+    /* .sidebar { width: 0; } */
+    
+    /* Kod Editörü Başlığı Biraz Küçülsün */
+    .editor-header {
+        padding: 10px;
+    }
+    
+    /* Editör içindeki yazılar mobilde çok küçük kalmasın */
+    #ace-editor {
+        font-size: 16px !important;
+    }
+}
