@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyCore - Python Asistanı</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    {% if not user %}
+    <div class="login-overlay">
+        <div class="login-box">
+            <h1>PyCore</h1>
+            <p>Python öğrenme yolculuğuna başlamak için giriş yap.</p>
+            <form action="/login" method="POST" autocomplete="off">
+                <div class="name-input-wrapper">
+                    <span class="material-symbols-outlined input-icon">badge</span>
+                    <input type="text" name="username" placeholder="Adın veya Takma Adın" required autofocus>
+                </div>
+                <button type="submit" class="start-btn">
+                    Başla <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </form>
+            <div class="legal-footer-login">
+                PyCore, eğitim amaçlı açık kaynaklı bir projedir.<br>
+                Python Software Foundation ile resmi bağı yoktur.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <nav class="sidebar" id="sidebar">
+        <div class="top-section">
+            <div class="menu-icon" id="menu-btn">
+                <span class="material-symbols-outlined">menu</span>
+            </div>
+            <div class="new-chat-btn">
+                <span class="material-symbols-outlined">add</span>
+                <span class="text">Yeni Sohbet</span>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <div class="nav-item static">
+                <span class="material-symbols-outlined">chat_bubble</span>
+                <span class="text">Python Öğren</span>
+            </div>
+            <div class="nav-item static">
+                <span class="material-symbols-outlined">code</span>
+                <span class="text">Kod Deneme</span>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="nav-item">
+                <span class="material-symbols-outlined">settings</span>
+                <span class="text">Ayarlar</span>
+            </div>
+            <div class="user-profile">
+                <span class="material-symbols-outlined">account_circle</span>
+                <div class="user-info">
+                    <span class="text">{{ user.name if user else 'Misafir' }}</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="top-bar">
+            <a href="#" class="pycore-logo">PyCore</a>
+        </div>
+        <div class="chat-section" id="chat-section">
+            <div class="chat-container" id="chat-container">
+                <div class="welcome-message">
+                    <h1>PyCore'a Hoş Geldin, {{ user.name if user else '' }}</h1>
+                    <p>Bugün ne kodlamak istersin?</p>
+                    
+                    <div class="suggestion-chips">
+                        <button class="chip" onclick="sendQuickMessage('Python\'da For Döngüsü nasıl çalışır?')">
+                            <span class="material-symbols-outlined">sync</span> For Döngüsü
+                        </button>
+                        <button class="chip" onclick="sendQuickMessage('Bana basit bir Hesap Makinesi kodu yaz.')">
+                            <span class="material-symbols-outlined">calculate</span> Hesap Makinesi
+                        </button>
+                        <button class="chip" onclick="sendQuickMessage('List ve Dictionary arasındaki fark nedir?')">
+                            <span class="material-symbols-outlined">compare_arrows</span> List vs Dict
+                        </button>
+                        <button class="chip" onclick="sendQuickMessage('Python öğrenmeye nereden başlamalıyım?')">
+                            <span class="material-symbols-outlined">school</span> Yol Haritası
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="input-box">
+                    <input type="text" id="user-input" placeholder="PyCore'a bir soru sor..." autocomplete="off">
+                    <button id="send-btn"><span class="material-symbols-outlined">send</span></button>
+                </div>
+                <p class="disclaimer">
+                    PyCore v1.0 • Seda Işık tarafından eğitim amaçlı geliştirilmiştir.
+                    <br><span style="opacity: 0.5; font-size: 10px;">Python Software Foundation ile resmi bağı yoktur.</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="editor-section" id="editor-section">
+            <div class="editor-header">
+                <span>PyCore Playground</span>
+                <div class="editor-controls">
+                    <button class="run-btn" id="run-code-btn"><span class="material-symbols-outlined">play_arrow</span> Çalıştır</button>
+                    <button class="close-editor-btn" id="close-editor-btn"><span class="material-symbols-outlined">close</span></button>
+                </div>
+            </div>
+            <div id="ace-editor"># PyCore Kod Editörü
+print("Merhaba PyCore!")</div>
+            <div class="output-console"><pre id="code-output">Çıktı bekleniyor...</pre></div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>PyCore Ayarları</h2>
+                <button id="close-settings" class="close-btn"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Kullanıcı Adı</h3>
+                        <p>{{ user.name if user else '' }}</p>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-info"><h3>Çıkış Yap</h3><p>Ana ekrana dön</p></div>
+                    <a href="/logout" class="danger-btn" style="text-decoration:none; display:inline-block; text-align:center;">Çıkış</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.7/ace.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
